@@ -10,6 +10,12 @@ Parameters:
 
 Resources:
 
+#  ProfileWithRolesForOurApp:
+#    Type: AWS::IAM::InstanceProfile
+#    Properties: 
+#      Roles:
+#        - UdacityS3ReadOnlyEC2
+
   LBSecGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -28,8 +34,8 @@ Resources:
         ToPort: 80
         CidrIp: 0.0.0.0/0
       - IpProtocol: tcp
-        FromPort: 8080
-        ToPort: 8080
+        FromPort: 80
+        ToPort: 80
         CidrIp: 0.0.0.0/0
 
   WebServerSecGroup:
@@ -41,8 +47,8 @@ Resources:
           !Sub "${EnvironmentName}-VPCID"
       SecurityGroupIngress:
       - IpProtocol: tcp
-        FromPort: 8080
-        ToPort: 8080
+        FromPort: 80
+        ToPort: 80
         CidrIp: 0.0.0.0/0
       - IpProtocol: tcp
         FromPort: 22
@@ -60,23 +66,16 @@ Resources:
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash
-          # Install docker
-          apt-get update
-          apt-get install -y apt-transport-https ca-certificates curl software-properties-common
-          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-          add-apt-repository \
-          "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-          $(lsb_release -cs) \
-          stable"
-          apt-get update
-          apt-get install -y docker-ce
-          usermod -aG docker ubuntu
-          docker run -p 8080:8080 tomcat:8.0
+          apt-get update -y
+          apt-get install apache2 -y
+          systemctl start apache2.service
+          cd /var/www/html
+          echo “It works! Udagram, Udacity” > index.html
       ImageId: ami-005bdb005fb00e791
       KeyName: TadhgD
       SecurityGroups:
       - Ref: WebServerSecGroup
-      InstanceType: t3.medium
+      InstanceType: t3.small
       BlockDeviceMappings:
       - DeviceName: "/dev/sdk"
         Ebs:
@@ -90,8 +89,8 @@ Resources:
           !Sub "${EnvironmentName}-PRIV-NETS"
       LaunchConfigurationName:
         Ref: WebAppLaunchConfig
-      MinSize: '3'
-      MaxSize: '5'
+      MinSize: '2'
+      MaxSize: '3'
       TargetGroupARNs:
       - Ref: WebAppTargetGroup
 
@@ -136,7 +135,7 @@ Resources:
       HealthCheckProtocol: HTTP
       HealthCheckTimeoutSeconds: 10
       HealthyThresholdCount: 2
-      Port: 8080
+      Port: 80
       Protocol: HTTP
       UnhealthyThresholdCount: 5
       VpcId: 
@@ -150,6 +149,4 @@ Outputs:
     Value: !Join
       - ''
       - - 'http://'
-        - !GetAtt
-        - WebAppLB
-        - DNSName
+        - !GetAtt WebAppLB.DNSName

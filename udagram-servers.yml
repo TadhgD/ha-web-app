@@ -20,6 +20,10 @@ Parameters:
         Description: Name of Key Pair to use in Launch Configuration
         Type: String
 
+    AMI:
+        Description: AMI ID to use in Launch Configuration
+        Type: String
+
 Resources:
 
 #  ProfileWithRolesForOurApp:
@@ -75,7 +79,7 @@ Resources:
           systemctl start apache2.service
           cd /var/www/html
           echo It works! Udagram, Udacity > index.html
-      ImageId: ami-0f004f40550f73050
+      ImageId: ${AMI}
       KeyName: ${KeyName}
       SecurityGroups:
       - Ref: WebServerSecGroup

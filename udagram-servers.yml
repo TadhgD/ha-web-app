@@ -79,8 +79,8 @@ Resources:
           systemctl start apache2.service
           cd /var/www/html
           echo It works! Udagram, Udacity > index.html
-      ImageId: ${AMI}
-      KeyName: ${KeyName}
+      ImageId: !Ref AMI
+      KeyName: !Ref KeyName
       SecurityGroups:
       - Ref: WebServerSecGroup
       InstanceType: t3.small
@@ -97,8 +97,8 @@ Resources:
           !Sub "${EnvironmentName}-PRIV-NETS"
       LaunchConfigurationName:
         Ref: WebAppLaunchConfig
-      MinSize: ${MinAutoScale}
-      MaxSize: ${MaxAutoScale}
+      MinSize: !Ref MinAutoScale
+      MaxSize: !Ref MaxAutoScale
       TargetGroupARNs:
       - Ref: WebAppTargetGroup
 

@@ -2,5 +2,13 @@
     {
         "ParameterKey": "EnvironmentName",
         "ParameterValue": "UdagramNetworkInfrastructure"
+    },
+    {
+        "ParameterKey": "MinAutoScale",
+        "ParameterValue": "4"
+    },
+    {
+        "ParameterKey": "MaxAutoScale",
+        "ParameterValue": "5"
     }
 ]

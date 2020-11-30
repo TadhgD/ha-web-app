@@ -16,10 +16,6 @@ Parameters:
         Description: Maximum number of instances in autoscaling group
         Type: String
 
-    KeyName:
-        Description: Name of Key Pair to use in Launch Configuration
-        Type: String
-
     AMI:
         Description: AMI ID to use in Launch Configuration
         Type: String
@@ -80,7 +76,6 @@ Resources:
           cd /var/www/html
           echo It works! Udagram, Udacity > index.html
       ImageId: !Ref AMI
-      KeyName: !Ref KeyName
       SecurityGroups:
       - Ref: WebServerSecGroup
       InstanceType: t3.small

@@ -10,5 +10,13 @@
     {
         "ParameterKey": "MaxAutoScale",
         "ParameterValue": "5"
+    },
+    {
+        "ParameterKey": "KeyName",
+        "ParameterValue": "TadhgD"
+    },
+    {
+        "ParameterKey": "AMI",
+        "ParameterValue": "ami-0f004f40550f73050"
     }
 ]
